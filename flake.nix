@@ -46,6 +46,8 @@
             pkgs.xorg.libXinerama
             pkgs.xorg.libXcursor
             pkgs.xorg.libXrandr
+
+            pkgs.maven # IGV
           ];
           env.NIX_CFLAGS_COMPILE = "-Wno-error -Wno-format-security";
           env.SOURCE_DATE_EPOCH = "946684800";
