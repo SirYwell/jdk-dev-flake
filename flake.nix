@@ -80,7 +80,7 @@
         devShells.default = pkgs.mkShell {
           packages = [
             pkgs.bashInteractive
-            pkgs.jdk25 # boot jdk
+            pkgs.temurin-bin-26 # boot jdk
             pkgs.ant
             pkgs.autoconf
             pkgs.bash
