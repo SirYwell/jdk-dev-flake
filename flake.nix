@@ -66,11 +66,11 @@
           '';
         };
         jtreg = pkgs.callPackage ./jtreg.nix { };
+        jtharness = pkgs.callPackage ./jtharness.nix { };
       in
       {
         packages = {
-          inherit igv;
-          inherit jtreg;
+          inherit igv jtreg jtharness;
           default = igv;
         };
 
