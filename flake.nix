@@ -65,10 +65,15 @@
             exec sh ./igv.sh
           '';
         };
+        jtreg = pkgs.callPackage ./jtreg.nix {
+          inherit jtharness asmtools;
+        };
+        jtharness = pkgs.callPackage ./jtharness.nix { };
+        asmtools = pkgs.callPackage ./asmtools.nix { };
       in
       {
         packages = {
-          inherit igv;
+          inherit igv jtreg jtharness asmtools;
           default = igv;
         };
 
@@ -111,9 +116,11 @@
 
             pkgs.maven # IGV
             igv
+            jtreg
           ];
           env.NIX_CFLAGS_COMPILE = "-Wno-error -Wno-format-security";
           env.SOURCE_DATE_EPOCH = "946684800";
+          env.JTREGEXE = jtreg;
           shellHook = ''
             export ANT_HOME=$(dirname $(dirname $(command -v ant)))/lib/ant/
           '';

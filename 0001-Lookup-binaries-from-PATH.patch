@@ -1,0 +1,142 @@
+From 41fedf6ba148fc35b3b95c105221ef473a59d894 Mon Sep 17 00:00:00 2001
+From: Marie Ramlow <me@nycode.dev>
+Date: Thu, 4 Jun 2026 19:18:23 +0200
+Subject: [PATCH] Lookup binaries from PATH
+
+---
+ make/Defs.gmk  | 74 ++++++++++++++++++++------------------------------
+ make/jtreg.gmk |  2 +-
+ 2 files changed, 30 insertions(+), 46 deletions(-)
+
+diff --git a/make/Defs.gmk b/make/Defs.gmk
+index d78d5e7..7f3aefb 100644
+--- a/make/Defs.gmk
++++ b/make/Defs.gmk
+@@ -134,42 +134,26 @@ REGTEST_TOOL_JAVAC_OPTIONS = \
+ 
+ #----- Unix commands
+ 
+-AWK     = /usr/bin/awk
+-CAT 	= /bin/cat
+-CHMOD 	= /bin/chmod
+-CP 	= /bin/cp
+-DIFF 	= /usr/bin/diff
+-ECHO	= /bin/echo
+-FIND	= /usr/bin/find
+-ifeq ($(SYSTEM_UNAME), FreeBSD)
+-GREP  := $(shell if [ -r /usr/local/bin/ggrep ]; then \
+-    echo /usr/local/bin/ggrep ; \
+-  else \
+-    echo $(ECHO) "GNU grep is required, but was not found" ; \
+-  fi )
+-else
+-GREP 	:= $(shell if [ -r /bin/grep ]; then echo /bin/grep ; else echo /usr/bin/grep ; fi )
+-endif
+-LN	= /bin/ln
+-LS	= /bin/ls
+-MKDIR 	= /bin/mkdir -p
+-MV 	= /bin/mv
+-PANDOC  := $(shell if [ -r /usr/bin/pandoc ]; then \
+-		echo /usr/bin/pandoc ; \
+-	elif [ -r /usr/local/bin/pandoc ]; then \
+-		echo /usr/local/bin/pandoc ; \
+-	elif [ -r /opt/homebrew/bin/pandoc ]; then \
+-		echo /opt/homebrew/bin/pandoc ; \
+-	else \
+-		echo /bin/echo "pandoc not available" ; \
+-	fi )
+-PERL	= /usr/bin/perl
+-PRINTF  = /usr/bin/printf
+-RM 	= /bin/rm -rf
+-SED 	:= $(shell if [ -r /bin/sed ]; then echo /bin/sed ; else echo /usr/bin/sed ; fi )
+-SH 	= /bin/sh
+-SORT    = /usr/bin/sort
+-TEST 	= /usr/bin/test
++AWK     = awk
++CAT 	= cat
++CHMOD 	= chmod
++CP 	= cp
++DIFF 	= diff
++ECHO	= echo
++FIND	= find
++GREP = grep
++LN	= ln
++LS	= ls
++MKDIR 	= mkdir -p
++MV 	= mv
++PANDOC = pandoc
++PERL	= perl
++PRINTF  = printf
++RM 	= rm -rf
++SED = sed
++SH 	= sh
++SORT    = sort
++TEST 	= test
+ ifeq ($(SYSTEM_UNAME), Darwin)
+ TIDY 	:= $(shell if [ -r /usr/local/bin/tidy ]; then \
+ 		echo /usr/local/bin/tidy ; \
+@@ -179,19 +163,19 @@ TIDY 	:= $(shell if [ -r /usr/local/bin/tidy ]; then \
+ 		echo /usr/bin/tidy ; \
+ 	fi )
+ else
+-TIDY	= /usr/bin/tidy
++TIDY	= tidy
+ endif
+-TOUCH 	= /usr/bin/touch
++TOUCH 	= touch
+ ifeq ($(SYSTEM_UNAME), FreeBSD)
+ UNZIP	= /usr/local/bin/unzip
+ else
+-UNZIP 	= /usr/bin/unzip
++UNZIP 	= unzip
+ endif
+-WC 	= /usr/bin/wc
++WC 	= wc
+ ifeq ($(SYSTEM_UNAME), FreeBSD)
+ ZIP	= /usr/local/bin/zip
+ else
+-ZIP 	= /usr/bin/zip
++ZIP 	= zip
+ endif
+ 
+ 
+@@ -229,11 +213,11 @@ BUILD_NUMBER = b00
+ 
+ # don't eval dates here directly, because that leads to unstable builds
+ #BUILD_YEAR:sh = /bin/date +"%Y"
+-BUILD_YEAR_CMD = /bin/date '+%Y'
++BUILD_YEAR_CMD = date '+%Y'
+ #BUILD_DOCDATE:sh = /bin/date +"%B %d, %Y"
+-BUILD_DOCDATE_CMD = /bin/date  +'%B %d, %Y'
++BUILD_DOCDATE_CMD = date  +'%B %d, %Y'
+ #BUILD_ZIPDATE:sh = /bin/date '+%d %h %Y'
+-BUILD_ZIPDATE_CMD = /bin/date  '+%d %h %Y'
++BUILD_ZIPDATE_CMD = date  '+%d %h %Y'
+ BUILD_NONFCS_MILESTONE_sh = echo $(BUILD_MILESTONE) | sed -e 's/[fF][cC][sS]//'
+ BUILD_NONFCS_MILESTONE = $(BUILD_NONFCS_MILESTONE_sh:sh)
+ 
+@@ -242,7 +226,7 @@ ZIPSFX_VERSION_sh = echo '$(BUILD_VERSION)' | sed -e 's|\([^0-9][^0-9]*\)|_|g'
+ ZIPSFX_MILESTONE_sh = echo '$(BUILD_MILESTONE)'
+ ZIPSFX_BUILD_sh = echo '$(BUILD_NUMBER)'
+ ZIPSFX_NEWBUILD_sh = echo '$(BUILD_NUMBER)' | sed -e 's|[^[0-9]||g' | xargs printf "%d"
+-ZIPSFX_DATE_sh = echo "`$(BUILD_ZIPDATE_CMD)`" | /usr/bin/tr -s '[A-Z] ' '[a-z]_'
++ZIPSFX_DATE_sh = echo "`$(BUILD_ZIPDATE_CMD)`" | -Z] ' '[a-z]_'
+ 
+ VERBOSE_ZIP_SUFFIX = $(shell $(ZIPSFX_VERSION_sh))-$(shell $(ZIPSFX_MILESTONE_sh))-bin-$(shell $(ZIPSFX_BUILD_sh))-$(shell $(ZIPSFX_DATE_sh))
+ 
+diff --git a/make/jtreg.gmk b/make/jtreg.gmk
+index 136e091..bf03c60 100644
+--- a/make/jtreg.gmk
++++ b/make/jtreg.gmk
+@@ -345,7 +345,7 @@ ID_COMMAND := $(PRINTF) "git:%s%s\n" \
+ 
+ $(JTREG_IMAGEDIR)/release:
+ 	echo "JTREG_VERSION=$(BUILD_VERSION) $(BUILD_NUMBER)" > $@
+-	echo "BUILD_DATE=`/bin/date +'%B %d, %Y'`" >> $@
++	echo "BUILD_DATE=`date +'%B %d, %Y'`" >> $@
+ 	if [ -r $(TOPDIR)/.git ]; then \
+ 	    echo "SOURCE=$$($(ID_COMMAND))" >> $@ ; \
+ 	elif [ -n "$(SRCREV)" -a -r $(SRCREV) ]; then \
+-- 
+2.54.0
+
