@@ -66,7 +66,7 @@
           '';
         };
         jtreg = pkgs.callPackage ./jtreg.nix {
-          inherit jtharness;
+          inherit jtharness asmtools;
         };
         jtharness = pkgs.callPackage ./jtharness.nix { };
         asmtools = pkgs.callPackage ./asmtools.nix { };

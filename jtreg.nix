@@ -6,6 +6,7 @@
   ant,
   lib,
   jtharness,
+  asmtools,
   writeText,
 }:
 
@@ -27,9 +28,13 @@ stdenv.mkDerivation (finalAttrs: {
 
   env = {
     ANT = lib.getExe ant;
+
     JTHARNESS_JAVATEST_JAR = jtharness.jar;
     JTHARNESS_LICENSE = writeText "LICENSE" "meow";
     JTHARNESS_COPYRIGHT = writeText "COPYRIGHT" "meow";
+
+    ASMTOOLS_JAR = asmtools.jar;
+    ASMTOOLS_LICENSE = writeText "LICENSE" "meow";
   };
 
   buildPhase = ''
