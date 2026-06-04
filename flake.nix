@@ -65,30 +65,12 @@
             exec sh ./igv.sh
           '';
         };
-	jtreg = pkgs.stdenv.mkDerivation {
-          pname = "jtreg";
-	  version = "8.2.1";
-	  src = pkgs.fetchFromGitHub {
-            owner = "openjdk";
-	    repo = "jtreg";
-	    rev = "5afa26a21f06e3f231982f0d0abc50c33d68167c";
-	    sha256 = "sha256-psrvWeuYDQ6rUtwvf981057Q6Rd5UsBMSd1uVCp7Y6g=";
-	  };
-	  buildInputs = [
-            pkgs.jdk25
-	    pkgs.which
-	  ];
-	  ANT = pkgs.lib.getExe pkgs.ant;
-	  buildPhase = ''
-            bash make/build.sh
-	  '';
-
-	};
+        jtreg = pkgs.callPackage ./jtreg.nix { };
       in
       {
         packages = {
           inherit igv;
-	  inherit jtreg;
+          inherit jtreg;
           default = igv;
         };
 
@@ -131,11 +113,11 @@
 
             pkgs.maven # IGV
             igv
-	    jtreg
+            jtreg
           ];
           env.NIX_CFLAGS_COMPILE = "-Wno-error -Wno-format-security";
           env.SOURCE_DATE_EPOCH = "946684800";
-	  env.JTREGEXE = jtreg;
+          env.JTREGEXE = jtreg;
           shellHook = ''
             export ANT_HOME=$(dirname $(dirname $(command -v ant)))/lib/ant/
           '';
