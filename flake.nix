@@ -98,16 +98,16 @@
             pkgs.libjpeg
             pkgs.giflib
             pkgs.libpng
-            pkgs.xorg.libX11
-            pkgs.xorg.libICE
-            pkgs.xorg.libXrender
-            pkgs.xorg.libXext
-            pkgs.xorg.libXt
-            pkgs.xorg.libXtst
-            pkgs.xorg.libXi
-            pkgs.xorg.libXinerama
-            pkgs.xorg.libXcursor
-            pkgs.xorg.libXrandr
+            pkgs.libX11
+            pkgs.libice
+            pkgs.libxrender
+            pkgs.libxext
+            pkgs.libxt
+            pkgs.libxtst
+            pkgs.libxi
+            pkgs.libxinerama
+            pkgs.libxcursor
+            pkgs.libxrandr
 
             pkgs.maven # IGV
             igv
