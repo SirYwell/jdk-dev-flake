@@ -65,7 +65,9 @@
             exec sh ./igv.sh
           '';
         };
-        jtreg = pkgs.callPackage ./jtreg.nix { };
+        jtreg = pkgs.callPackage ./jtreg.nix {
+          inherit jtharness;
+        };
         jtharness = pkgs.callPackage ./jtharness.nix { };
       in
       {
