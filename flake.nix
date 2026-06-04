@@ -69,10 +69,11 @@
           inherit jtharness;
         };
         jtharness = pkgs.callPackage ./jtharness.nix { };
+        asmtools = pkgs.callPackage ./asmtools.nix { };
       in
       {
         packages = {
-          inherit igv jtreg jtharness;
+          inherit igv jtreg jtharness asmtools;
           default = igv;
         };
 
