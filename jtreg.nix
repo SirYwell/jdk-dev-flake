@@ -16,7 +16,7 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "jtreg";
-  version = "8.2.1+1";
+  version = "8.3+1";
 
   patches = [
     ./0001-Lookup-binaries-from-PATH.patch
@@ -27,7 +27,7 @@ stdenv.mkDerivation (finalAttrs: {
     owner = "openjdk";
     repo = "jtreg";
     tag = "jtreg-${finalAttrs.version}";
-    sha256 = "sha256-psrvWeuYDQ6rUtwvf981057Q6Rd5UsBMSd1uVCp7Y6g=";
+    sha256 = "sha256-ofVsoZJFCxVLm2RwhATsA4Aiz/zF9uol7vIDJhoNZiQ=";
   };
 
   nativeBuildInputs = [
