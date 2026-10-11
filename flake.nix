@@ -85,7 +85,7 @@
         devShells.default = pkgs.mkShell {
           packages = [
             pkgs.bashInteractive
-            pkgs.temurin-bin-26 # boot jdk
+            pkgs.temurin-bin-27 # boot jdk
             pkgs.ant
             pkgs.autoconf
             pkgs.bash
@@ -120,7 +120,7 @@
           ];
           env.NIX_CFLAGS_COMPILE = "-Wno-error -Wno-format-security";
           env.SOURCE_DATE_EPOCH = "946684800";
-          env.JTREGEXE = jtreg;
+          env.JTREGEXE = "${jtreg}/bin/jtreg";
           shellHook = ''
             export ANT_HOME=$(dirname $(dirname $(command -v ant)))/lib/ant/
           '';
